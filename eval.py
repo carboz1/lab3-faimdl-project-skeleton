@@ -1,23 +1,21 @@
-def validate(model, val_loader, criterion):
-    model.eval()
-    val_loss = 0
+import dataset.dataset
+import utils.utils
+import torch
+import checkpoints.model
+import train
 
-    correct, total = 0, 0
+best_acc = 0
 
-    with torch.no_grad():
-        for batch_idx, (inputs, targets) in enumerate(val_loader):
-            inputs, targets = inputs.cuda(), targets.cuda()
+# Run the training process for {num_epochs} epochs
+num_epochs = 10
+for epoch in range(1, num_epochs + 1):
+    utils.utils.train(epoch, checkpoints.model, dataset.dataset.train_loader, train.criterion, train.optimizer)
 
-            outputs = model(inputs)
-            loss = criterion(outputs, targets)
+    # At the end of each training iteration, perform a validation step
+    val_accuracy = utils.utils.validate(checkpoints.model, dataset.dataset.val_loader, train.criterion)
 
-            val_loss += loss.item()
-            _, predicted = outputs.max(1)
-            total += targets.size(0)
-            correct += predicted.eq(targets).sum().item()
+    # Best validation accuracy
+    best_acc = max(best_acc, val_accuracy)
 
-    val_loss = val_loss / len(val_loader)
-    val_accuracy = 100. * correct / total
 
-    print(f'Validation Loss: {val_loss:.6f} Acc: {val_accuracy:.2f}%')
-    return val_accuracy
+print(f'Best validation accuracy: {best_acc:.2f}%')

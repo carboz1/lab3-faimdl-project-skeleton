@@ -28,3 +28,5 @@ tiny_imagenet_dataset_val = ImageFolder(root='tiny-imagenet/tiny-imagenet-200/va
 
 import torch
 
+train_loader = torch.utils.data.DataLoader(tiny_imagenet_dataset_train, batch_size=32, shuffle=True, num_workers=8)
+val_loader = torch.utils.data.DataLoader(tiny_imagenet_dataset_val, batch_size=32, shuffle=False)
