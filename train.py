@@ -1,5 +1,9 @@
 from torch import nn
-import torch # Added import for torch.flatten
+
+import torch
+
+train_loader = torch.utils.data.DataLoader(tiny_imagenet_dataset_train, batch_size=32, shuffle=True, num_workers=8)
+val_loader = torch.utils.data.DataLoader(tiny_imagenet_dataset_val, batch_size=32, shuffle=False)
 
 # Define the custom neural network
 class CustomNet(nn.Module):
